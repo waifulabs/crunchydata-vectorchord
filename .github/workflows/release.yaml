@@ -25,7 +25,7 @@ jobs:
           # renovate: datasource=docker depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres
           - "ubi9-17.4-2516"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set Up Docker Buildx
         uses: docker/setup-buildx-action@v3
