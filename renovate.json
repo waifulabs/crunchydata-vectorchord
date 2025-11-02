@@ -9,7 +9,7 @@
       "description": [
         "Process annotated dependencies"
       ],
-      "fileMatch": [
+      "managerFilePatterns": [
         "/\\.env(?:\\.j2)?$/",
         "/\\.sh(?:\\.j2)?$/",
         "/^Dockerfile$/",
