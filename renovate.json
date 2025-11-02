@@ -3,6 +3,15 @@
   "extends": [
     "config:recommended"
   ],
+  "customDatasources": {
+    "crunchy-postgres": {
+      "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql17",
+      "format": "text",
+      "transformTemplates": [
+        "{ \"releases\": ($match($$, \"docker pull <!-- -->registry\\\\.developers\\\\.crunchydata\\\\.com/crunchydata/crunchy-postgres:(?<version>[a-zA-Z0-9._-]+)\").groups.version ~> $distinct()).{\"version\": $} }"
+      ]
+    }
+  },
   "customManagers": [
     {
       "customType": "regex",
