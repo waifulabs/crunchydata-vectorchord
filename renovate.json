@@ -12,7 +12,7 @@
       "managerFilePatterns": [
         "/(^|/).+\\.env$/",
         "/(^|/).+\\.ya?ml(?:\\.j2)?$/",
-        "/^Dockerfile#/"
+        "/^Dockerfile$/"
       ],
       "matchStrings": [
         "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( repository=(?<registryUrl>\\S+))?\\n.+(:\\s|=)(&\\S+\\s)?(?<currentValue>\\S+)",
