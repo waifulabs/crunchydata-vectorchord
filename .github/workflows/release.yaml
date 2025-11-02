@@ -46,7 +46,7 @@ jobs:
         with:
           files: |
             Dockerfile
-            .github/workflows/packages.yaml
+            .github/workflows/release.yaml
             pgvectors.sql
 
       - name: Determine image push
