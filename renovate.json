@@ -2,6 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "github>waifulabs/infrastructure//.renovate/customManagers.json5"
+    "github>waifulabs/crunchydata-vectorchord//.renovate/customManagers.json5"
   ]
 }
