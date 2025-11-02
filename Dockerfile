@@ -29,4 +29,4 @@ COPY --chown=root:root --chmod=755 --from=builder /tmp/usr/share/postgresql/${PG
 # Numeric User ID for Default Postgres User
 USER 26
 
-COPY spgvectors.sql /docker-entrypoint-initdb.d/
+COPY pgvectors.sql /docker-entrypoint-initdb.d/
