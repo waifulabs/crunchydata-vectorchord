@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         versions:
-          # renovate: datasource=docker depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres
+          # renovate: datasource=custom.crunchy-postgres depName=crunchydata/crunchy-postgres versioning=loose
           - ubi9-16.8-2516
-          # renovate: datasource=docker depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres
+          # renovate: datasource=custom.crunchy-postgres depName=crunchydata/crunchy-postgres versioning=loose
           - ubi9-17.4-2516
     steps:
       - uses: actions/checkout@v5
