@@ -2,6 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "github>waifulabs/infrastructure//.github/renovate/customManagers.json5"
+    "github>waifulabs/infrastructure//.renovate/customManagers.json5"
   ]
 }
