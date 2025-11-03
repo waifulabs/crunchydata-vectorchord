@@ -6,9 +6,9 @@
   "customDatasources": {
     "crunchy-postgres": {
       "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql17",
-      "format": "html",
+      "format": "text",
       "transformTemplates": [
-        "{ \"releases\": ($match($$, \"docker pull <!-- -->registry\\\\.developers\\\\.crunchydata\\\\.com/crunchydata/crunchy-postgres:(?<version>[a-zA-Z0-9._-]+)\").groups.version ~> $distinct()).{\"version\": $} }"
+        "{ \"releases\": $distinct($match($$, /\\\"tag\\\":\\\"(ubi9-[^\\\"]+)\\\"/).groups[0]) ~> $map(function($v){{\"version\": $v}}) }"
       ]
     }
   },
@@ -29,7 +29,7 @@
         "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\n\\s*-\\s*\"(?<currentValue>[^\"]+)\""
       ],
       "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
-      "versioningTemplate": "{{{versioning}}}"
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{/if}}"
     }
   ]
 }
