@@ -25,10 +25,11 @@
         "/\\.github\\/workflows\\/.*\\.ya?ml$/"
       ],
       "matchStrings": [
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.+(-|:\\s|=)(&\\S+\\s)?(?<currentValue>\\S+)",
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n\\s*-\\s*\"(?<currentValue>[^\"]+)\""
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\n.+(-|:\\s|=)(&\\S+\\s)?(?<currentValue>\\S+)",
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\n\\s*-\\s*\"(?<currentValue>[^\"]+)\""
       ],
-      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}"
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+      "versioningTemplate": "{{{versioning}}}"
     }
   ]
 }
