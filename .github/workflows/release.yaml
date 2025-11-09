@@ -1,9 +1,9 @@
 ---
 name: Build and Release Image
 on:
-  push: { branches: [ main ] }
-  pull_request: { branches: [ main ] }
-  release: { types: [ published ] }
+  push: { branches: [main] }
+  pull_request: { branches: [main] }
+  release: { types: [published] }
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         versions:
-          # renovate: datasource=custom.crunchy-postgres depName=crunchydata/crunchy-postgres
+          # renovate: datasource=docker depName=crunchydata/crunchy-postgres
           - ubi9-16.8-2516
-          # renovate: datasource=custom.crunchy-postgres depName=crunchydata/crunchy-postgres
+          # renovate: datasource=docker depName=crunchydata/crunchy-postgres
           - ubi9-17.4-2516
     steps:
       - uses: actions/checkout@v5
@@ -39,7 +39,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Determine version change
         id: changed-version
         uses: tj-actions/changed-files@v47
