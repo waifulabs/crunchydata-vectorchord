@@ -6,12 +6,18 @@
   "customDatasources": {
     "crunchy-postgres": {
       "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql17",
-      "format": "html",
-      "transformTemplates": [
-        "{ \"releases\": $distinct($replace($$, /(?s).*\"tag\":\"(ubi9-[^\"]+)\".*/g, \"$1\")) ~> $map(function($v){ {\"version\": $v} }) }"
-      ]
+      "format": "html"
+      //"transformTemplates": [
+      //  "{ \"releases\": $distinct($replace($$, /(?s).*\"tag\":\"(ubi9-[^\"]+)\".*/g, \"$1\")) ~> $map(function($v){ {\"version\": $v} }) }"
+      //]
     }
   },
+  "packageRules": [
+    {
+      "matchDatasources": ["custom.crunchy-postgres"],
+      "extractVersion": "/^(?<version>ubi9-[\\w.\\-]+)$/"
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
