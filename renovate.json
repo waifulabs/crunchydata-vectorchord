@@ -6,15 +6,17 @@
   "customDatasources": {
     "crunchy-postgres": {
       "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql17",
-      "format": "html"
-      //"transformTemplates": [
-      //  "{ \"releases\": $distinct($replace($$, /(?s).*\"tag\":\"(ubi9-[^\"]+)\".*/g, \"$1\")) ~> $map(function($v){ {\"version\": $v} }) }"
-      //]
+      "format": "html",
+      "transformTemplates": [
+        "{ \"releases\": $map($distinct($match($$, /\\\"tag\\\":\\\"(ubi9-[^\\\"]+)\\\"/g).group1), function($v) { {\"version\": $v} }) }"
+      ]
     }
   },
   "packageRules": [
     {
-      "matchDatasources": ["custom.crunchy-postgres"],
+      "matchDatasources": [
+        "custom.crunchy-postgres"
+      ],
       "extractVersion": "/^(?<version>ubi9-[\\w.\\-]+)$/"
     }
   ],
@@ -36,7 +38,7 @@
       "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{/if}}"
     },
-        {
+    {
       "customType": "regex",
       "description": [
         "Process annotated Crunchy Postgres dependencies"
