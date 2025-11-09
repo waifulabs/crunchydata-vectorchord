@@ -6,10 +6,7 @@
   "customDatasources": {
     "crunchy-postgres": {
       "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql17",
-      "format": "html",
-      //"transformTemplates": [
-      //  "{ \"releases\": $distinct($replace($$, /(?s).*\"tag\":\"(ubi9-[^\"]+)\".*/g, \"$1\")) ~> $map(function($v){ {\"version\": $v} }) }"
-      //]
+      "format": "html"
     }
   },
   "packageRules": [
@@ -39,16 +36,16 @@
         {
       "customType": "regex",
       "description": [
-        "Process annotated dependencies"
+        "Process crunchy-postgres dependencies in GitHub Actions workflows"
       ],
       "managerFilePatterns": [
         "/\\.github\\/workflows\\/.*\\.ya?ml$/"
       ],
       "matchStrings": [
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\n.+(-|:\\s|=)(&\\S+\\s)?(?<currentValue>\\S+)",
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\n\\s*-\\s*\"(?<currentValue>[^\"]+)\""
+        "datasource=(?<datasource>\\S+)\\n.+(-|:\\s|=)(&\\S+\\s)?(?<currentValue>\\S+)",
+        "datasource=(?<datasource>\\S+)\\n\\s*-\\s*\"(?<currentValue>[^\"]+)\""
       ],
-      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+      "datasourceTemplate": "custom.crunchy-postgres",
       "versioningTemplate": "regex:^(?<base>ubi\\d+)-(?<major>\\d+)\\.(?<minor>\\d+)-(?<patch>\\d+)$"
     }
   ]
