@@ -3,42 +3,66 @@
   "extends": [
     "config:recommended"
   ],
+  "customDatasources": {
+    "crunchy-postgres-16": {
+      "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql16",
+      "format": "html",
+      "transformTemplates": [
+        "{\"releases\": [{\"version\": $match($$, /ubi9-(16\\.[\\d]+-\\d+)/).groups[0]}]}"
+      ]
+    },
+    "crunchy-postgres-17": {
+      "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql17",
+      "format": "html",
+      "transformTemplates": [
+        "{\"releases\": [{\"version\": $match($$, /ubi9-(17\\.[\\d]+-\\d+)/).groups[0]}]}"
+      ]
+    }
+  },
   "packageRules": [
     {
       "matchDatasources": [
-        "docker"
+        "custom.crunchy-postgres-16",
+        "custom.crunchy-postgres-17"
       ],
-      "matchPackagePatterns": [
-        "crunchydata/crunchy-postgres"
-      ],
-      "versioning": "regex:^(?<compatibility>ubi\\d+)-(?<major>\\d+)\\.(?<minor>\\d+)-(?<patch>\\d+)$"
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)-(?<patch>\\d+)$"
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Process CrunchyDB Postgres versions in GitHub workflows",
-      "fileMatchStrings": [
+      "description": "Process PostgreSQL 16 versions in GitHub workflows",
+      "fileMatch": [
         "\\.github/workflows/.*\\.ya?ml$"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+- (?<currentValue>ubi\\d+-[\\d.]+-\\d+)"
+        "# renovate: datasource=custom\\.crunchy-postgres-16 depName=crunchydata/crunchy-postgres\\s+- ubi9-(?<currentValue>[\\d\\.]+-\\d+)"
       ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "registry.developers.crunchydata.com/{{depName}}",
-      "versioningTemplate": "regex:^(?<compatibility>ubi\\d+)-(?<major>\\d+)\\.(?<minor>\\d+)-(?<patch>\\d+)$"
+      "datasourceTemplate": "custom.crunchy-postgres-16",
+      "depNameTemplate": "crunchydata/crunchy-postgres"
+    },
+    {
+      "customType": "regex",
+      "description": "Process PostgreSQL 17 versions in GitHub workflows",
+      "fileMatch": [
+        "\\.github/workflows/.*\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=custom\\.crunchy-postgres-17 depName=crunchydata/crunchy-postgres\\s+- ubi9-(?<currentValue>[\\d\\.]+-\\d+)"
+      ],
+      "datasourceTemplate": "custom.crunchy-postgres-17",
+      "depNameTemplate": "crunchydata/crunchy-postgres"
     },
     {
       "customType": "regex",
       "description": "Process VectorChord versions in Dockerfile",
-      "fileMatchStrings": [
+      "fileMatch": [
         "^Dockerfile$"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+ARG VECTORCHORD_TAG=(?<currentValue>\\S+)"
       ],
-      "datasourceTemplate": "github-releases",
-      "versioningTemplate": "semver"
+      "datasourceTemplate": "github-releases"
     }
   ]
 }
