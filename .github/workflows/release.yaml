@@ -20,10 +20,10 @@ jobs:
       fail-fast: false
       matrix:
         versions:
-          # renovate: datasource=custom.crunchy-postgres depName=crunchydata/crunchy-postgres
-          - ubi9-16.8-2516
-          # renovate: datasource=custom.crunchy-postgres depName=crunchydata/crunchy-postgres
-          - ubi9-17.4-2516
+          # renovate: datasource=custom.crunchydata-postgres depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres registryUrl=https://www.crunchydata.com/developers/download-postgres/containers/postgresql17
+          - ubi9-17.6-2542
+          # renovate: datasource=custom.crunchydata-postgres depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres registryUrl=https://www.crunchydata.com/developers/download-postgres/containers/postgresql16
+          - ubi9-16.10-2542
     steps:
       - uses: actions/checkout@v5
 

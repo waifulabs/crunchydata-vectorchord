@@ -4,7 +4,7 @@
     "config:recommended"
   ],
   "customDatasources": {
-    "crunchy-postgres": {
+    "crunchydata-postgres": {
       "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql17",
       "format": "html",
       "transformTemplates": [
