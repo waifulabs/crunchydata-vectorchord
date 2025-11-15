@@ -35,7 +35,7 @@
     {
       customType: 'regex',
       managerFilePatterns: [
-        '.github/workflows/release.yaml$',
+        '^versions.yaml$',
       ],
       matchStrings: [
         'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: registryUrl=(?<registryUrl>\\S+))?\\n.*?- \"?(?<currentValue>.*)\"?',
