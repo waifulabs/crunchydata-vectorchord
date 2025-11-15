@@ -1,46 +1,40 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-  extends: [
-    'config:recommended',
-    'helpers:pinGitHubActionDigests'
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "helpers:pinGitHubActionDigests"
   ],
-  repositories: ['waifulabs/crunchydata-vectorchord'],
-  customDatasources: {
-    'crunchydata-postgres': {
-      defaultRegistryUrlTemplate: 'https://www.crunchydata.com/developers/download-postgres/containers/postgresql17',
-      format: 'plain',
-      transformTemplates: [
-        '{ "releases": $map($map($.releases, function($v) { $match($v.version, /\\\"tag\\\":\\\"(ubi[0-9-.]+)\\\"/).groups[0] }), function($v) { { "version": $v } }) }',
+  "repositories": ["waifulabs/crunchydata-vectorchord"],
+  "automerge": false,
+  "rebaseWhen": "conflicted",
+  "customDatasources": {
+    "crunchydata-postgres": {
+      "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql17",
+      "format": "plain",
+      "transformTemplates": [
+        "{ \"releases\": $map($map($.releases, function($v) { $match($v.version, /\\\"tag\\\":\\\"(ubi[0-9-.]+)\\\"/).groups[0] }), function($v) { { \"version\": $v } }) }"
       ],
-    },
+    }
   },
-  packageRules: [
+  "customManagers": [
     {
-      matchUpdateTypes: [
-        'major',
-      ],
-      matchPackageNames: [
-        'registry.developers.crunchydata.com/crunchydata/crunchy-postgres',
-      ],
-      enabled: false,
-    },
-    {
-      matchPackageNames: [
-        'registry.developers.crunchydata.com/crunchydata/crunchy-postgres',
-      ],
-      groupName: 'postgresql',
-      versioning: 'regex:^(?<compatibility>ubi\\d+)-(?<major>\\d+).(?<minor>\\d+)-(?<patch>\\d+)',
-    },
+      "customType": "regex",
+      "fileMatch": ["^versions.yaml$"],
+      "matchStrings": [
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: registryUrl=(?<registryUrl>\\S+))?\\n.*?- \"?(?<currentValue>.*)\"?"
+      ]
+    }
   ],
-  customManagers: [
+  "packageRules": [
     {
-      customType: 'regex',
-      managerFilePatterns: [
-        '^versions.yaml$',
-      ],
-      matchStrings: [
-        'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: registryUrl=(?<registryUrl>\\S+))?\\n.*?- \"?(?<currentValue>.*)\"?',
-      ],
+      "matchUpdateTypes": ["major"],
+      "matchPackageNames": ["registry.developers.crunchydata.com/crunchydata/crunchy-postgres"],
+      "enabled": false
     },
-  ],
+    {
+      "matchPackageNames": ["registry.developers.crunchydata.com/crunchydata/crunchy-postgres"],
+      "groupName": "postgresql",
+      "versioning": "regex:^(?<compatibility>ubi\\d+)-(?<major>\\d+).(?<minor>\\d+)-(?<patch>\\d+)"
+    }
+  ]
 }
