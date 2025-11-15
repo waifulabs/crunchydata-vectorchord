@@ -2,6 +2,7 @@
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
     'config:recommended',
+    'helpers:pinGitHubActionDigests'
   ],
   customDatasources: {
     'crunchydata-postgres': {
@@ -34,10 +35,10 @@
     {
       customType: 'regex',
       managerFilePatterns: [
-        '//\\.github/workflows/.*\\.ya?ml$//',
+        '.github/workflows/release.yaml$',
       ],
       matchStrings: [
-        'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: registryUrl=(?<registryUrl>\\S+))?\\n.*?- "?(?<currentValue>.*)"?',
+        'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: registryUrl=(?<registryUrl>\\S+))?\\n.*?- \"?(?<currentValue>.*)\"?',
       ],
     },
   ],
