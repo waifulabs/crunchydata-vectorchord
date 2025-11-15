@@ -26,14 +26,25 @@ jobs:
             const owner = context.repo.owner;
             const packageName = 'crunchydata-vectorchord';
 
-            // Get all versions of the package
-            const { data: versions } = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
-              package_type: 'container',
-              package_name: packageName,
-              org: owner,
-              per_page: 100,
-              state: 'active'
-            });
+            // Get all versions of the package (with pagination support)
+            let versions = [];
+            let page = 1;
+            let hasMore = true;
+
+            while (hasMore) {
+              const { data: pageVersions } = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+                package_type: 'container',
+                package_name: packageName,
+                org: owner,
+                per_page: 100,
+                page: page,
+                state: 'active'
+              });
+
+              versions = versions.concat(pageVersions);
+              hasMore = pageVersions.length === 100;
+              page++;
+            }
 
             console.log(`Found ${versions.length} total package versions`);
 
