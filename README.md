@@ -63,6 +63,16 @@ For example:
 docker build . --build-arg="CDPG_TAG=ubi9-17.5-2520" --build-arg="VECTORCHORD_TAG=0.4.2"
 ```
 
+## Image Cleanup
+
+The repository includes an automated cleanup workflow that manages old Docker images in the GitHub Container Registry. The cleanup workflow:
+
+- Runs automatically after each release build completes
+- Runs weekly on Sundays at 2 AM UTC
+- Can be triggered manually via workflow dispatch
+
+For each PostgreSQL major version (e.g., 16, 17, 18), the workflow keeps only the **last 2 versions** based on the Crunchy Postgres build number (the `-2542` suffix in tags like `ubi9-18.0-2542`). Older versions are automatically deleted to save storage space and keep the registry organized.
+
 ## Thanks
 
 I shamelessly took a lot of code from [cloudnative-vectorchord](https://github.com/tensorchord/cloudnative-vectorchord).
