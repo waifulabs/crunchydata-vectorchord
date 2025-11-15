@@ -1,60 +1,60 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
   ],
-  "customDatasources": {
-    "crunchydata-postgres": {
-      "defaultRegistryUrlTemplate": "https://www.crunchydata.com/developers/download-postgres/containers/postgresql17",
-      "format": "html",
-      "transformTemplates": [
-        "{ \"releases\": $map($distinct($match($$, /\\\"tag\\\":\\\"(ubi9-[^\\\"]+)\\\"/g).group1), function($v) { {\"version\": $v} }) }"
-      ]
-    }
+  customDatasources: {
+    'crunchydata-postgres': {
+      defaultRegistryUrlTemplate: 'https://www.crunchydata.com/developers/download-postgres/containers/postgresql17',
+      format: 'html',
+      transformTemplates: [
+        '{ "releases": $map($distinct($match($$, /\\"tag\\":\\"(ubi9-[^\\"]+)\\"/g).group1), function($v) { {"version": $v} }) }',
+      ],
+    },
   },
-  "packageRules": [
+  packageRules: [
     {
-      "matchDatasources": [
-        "custom.crunchy-postgres"
+      matchDatasources: [
+        'custom.crunchy-postgres',
       ],
-      "extractVersion": "/^(?<version>ubi9-[\\w.\\-]+)$/"
-    }
+      extractVersion: '/^(?<version>ubi9-[\\w.\\-]+)$/',
+    },
   ],
-  "customManagers": [
+  customManagers: [
     {
-      "customType": "regex",
-      "description": "Process PostgreSQL 16 versions in GitHub workflows",
-      "fileMatch": [
-        "\\.github/workflows/.*\\.ya?ml$"
+      customType: 'regex',
+      description: 'Process PostgreSQL 16 versions in GitHub workflows',
+      managerFilePatterns: [
+        '/\\.github/workflows/.*\\.ya?ml$/',
       ],
-      "matchStrings": [
-        "# renovate: datasource=custom\\.crunchy-postgres depName=crunchydata/crunchy-postgres\\s+- ubi9-(?<currentValue>[\\d\\.]+-\\d+)"
+      matchStrings: [
+        '# renovate: datasource=custom\\.crunchy-postgres depName=crunchydata/crunchy-postgres\\s+- ubi9-(?<currentValue>[\\d\\.]+-\\d+)',
       ],
-      "datasourceTemplate": "custom.crunchy-postgres",
-      "depNameTemplate": "crunchydata/crunchy-postgres"
+      datasourceTemplate: 'custom.crunchy-postgres',
+      depNameTemplate: 'crunchydata/crunchy-postgres',
     },
     {
-      "customType": "regex",
-      "description": "Process PostgreSQL 17 versions in GitHub workflows",
-      "fileMatch": [
-        "\\.github/workflows/.*\\.ya?ml$"
+      customType: 'regex',
+      description: 'Process PostgreSQL 17 versions in GitHub workflows',
+      managerFilePatterns: [
+        '/\\.github/workflows/.*\\.ya?ml$/',
       ],
-      "matchStrings": [
-        "# renovate: datasource=custom\\.crunchy-postgres depName=crunchydata/crunchy-postgres\\s+- ubi9-(?<currentValue>[\\d\\.]+-\\d+)"
+      matchStrings: [
+        '# renovate: datasource=custom\\.crunchy-postgres depName=crunchydata/crunchy-postgres\\s+- ubi9-(?<currentValue>[\\d\\.]+-\\d+)',
       ],
-      "datasourceTemplate": "custom.crunchy-postgres",
-      "depNameTemplate": "crunchydata/crunchy-postgres"
+      datasourceTemplate: 'custom.crunchy-postgres',
+      depNameTemplate: 'crunchydata/crunchy-postgres',
     },
     {
-      "customType": "regex",
-      "description": "Process VectorChord versions in Dockerfile",
-      "fileMatch": [
-        "^Dockerfile$"
+      customType: 'regex',
+      description: 'Process VectorChord versions in Dockerfile',
+      managerFilePatterns: [
+        '/^Dockerfile$/',
       ],
-      "matchStrings": [
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+ARG VECTORCHORD_TAG=(?<currentValue>\\S+)"
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+ARG VECTORCHORD_TAG=(?<currentValue>\\S+)',
       ],
-      "datasourceTemplate": "github-releases"
-    }
-  ]
+      datasourceTemplate: 'github-releases',
+    },
+  ],
 }
