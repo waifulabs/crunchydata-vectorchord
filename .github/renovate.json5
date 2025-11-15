@@ -8,29 +8,37 @@
       defaultRegistryUrlTemplate: 'https://www.crunchydata.com/developers/download-postgres/containers/postgresql17',
       format: 'plain',
       transformTemplates: [
-        '{ \"releases\": $map($map($.releases, function($v) { $match($v.version, /\\\"tag\\\":\\\"(ubi[0-9-.]+)\\\"/).groups[0] }), function($v) { { \"version\": $v } }) }',
+        '{ "releases": $map($map($.releases, function($v) { $match($v.version, /\\"tag\\":\\"(ubi[0-9-.]+)\\"/).groups[0] }), function($v) { { "version": $v } }) }',
       ],
     },
   },
   packageRules: [
     {
-      "matchUpdateTypes": ["major"],
-      "matchPackageNames": ["registry.developers.crunchydata.com/crunchydata/crunchy-postgres"],
-      "enabled": false
+      matchUpdateTypes: [
+        'major',
+      ],
+      matchPackageNames: [
+        'registry.developers.crunchydata.com/crunchydata/crunchy-postgres',
+      ],
+      enabled: false,
     },
     {
-      "matchPackageNames": ["registry.developers.crunchydata.com/crunchydata/crunchy-postgres"],
-      "groupName": "postgresql",
-      "versioning": "regex:^(?<compatibility>ubi\\d+)-(?<major>\\d+).(?<minor>\\d+)-(?<patch>\\d+)"
-    }
+      matchPackageNames: [
+        'registry.developers.crunchydata.com/crunchydata/crunchy-postgres',
+      ],
+      groupName: 'postgresql',
+      versioning: 'regex:^(?<compatibility>ubi\\d+)-(?<major>\\d+).(?<minor>\\d+)-(?<patch>\\d+)',
+    },
   ],
   customManagers: [
     {
-      "customType": "regex",
-      "fileMatch": ["/\\.github/workflows/.*\\.ya?ml$/"],
-      "matchStrings": [
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: registryUrl=(?<registryUrl>\\S+))?\\n.*?- \"?(?<currentValue>.*)\"?"
-      ]
-    }
+      customType: 'regex',
+      managerFilePatterns: [
+        '//\\.github/workflows/.*\\.ya?ml$//',
+      ],
+      matchStrings: [
+        'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: registryUrl=(?<registryUrl>\\S+))?\\n.*?- "?(?<currentValue>.*)"?',
+      ],
+    },
   ],
 }
