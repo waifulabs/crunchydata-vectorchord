@@ -9,7 +9,7 @@ ARG VECTORCHORD_TAG
 # drop to root to copy files
 USER root
 
-RUN PG_MAJOR=$(echo "$CDPG_TAG" | cut -d'-' -f2 | cut -d'.' -f1) && \
+RUN PG_MAJOR=$(echo "$CRUNCHYDATA_VERSION" | cut -d'-' -f2 | cut -d'.' -f1) && \
     case "$TARGETARCH" in \
         amd64) URLARCH="x86_64-linux" ;; \
         arm64) URLARCH="aarch64-linux" ;; \
