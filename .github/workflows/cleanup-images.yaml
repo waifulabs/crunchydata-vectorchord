@@ -1,0 +1,135 @@
+---
+name: Cleanup Old Images
+on:
+  # Run after the release workflow completes
+  workflow_run:
+    workflows: ["Build and Release Image"]
+    types: [completed]
+  # Allow manual trigger
+  workflow_dispatch:
+  # Run weekly to clean up any accumulated old images
+  schedule:
+    - cron: '0 2 * * 0'  # Every Sunday at 2 AM UTC
+
+permissions:
+  packages: write
+  contents: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old container images
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const packageName = 'crunchydata-vectorchord';
+
+            // Get all versions of the package
+            const { data: versions } = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+              package_type: 'container',
+              package_name: packageName,
+              org: owner,
+              per_page: 100,
+              state: 'active'
+            });
+
+            console.log(`Found ${versions.length} total package versions`);
+
+            // Group versions by PostgreSQL major version
+            // Tag format examples:
+            // - ubi9-18.0-2542-1.0.0
+            // - 18-1.0.0
+            // - ubi9-18.0-2542
+            // - 18
+            const pgVersionGroups = {};
+
+            for (const version of versions) {
+              // Get tags for this version
+              const tags = version.metadata?.container?.tags || [];
+
+              // Skip versions without tags
+              if (tags.length === 0) {
+                console.log(`Skipping version ${version.id} - no tags`);
+                continue;
+              }
+
+              console.log(`Version ${version.id} has tags: ${tags.join(', ')}`);
+
+              // Find tags with build number (e.g., ubi9-18.0-2542 or ubi9-18.0-2542-1.0.0)
+              const buildTags = tags.filter(tag => tag.match(/ubi9-(\d+)\.\d+-(\d+)/));
+
+              if (buildTags.length === 0) {
+                console.log(`Skipping version ${version.id} - no build number tags`);
+                continue;
+              }
+
+              for (const tag of buildTags) {
+                const match = tag.match(/ubi9-(\d+)\.\d+-(\d+)/);
+                if (match) {
+                  const pgMajor = match[1];
+                  const buildNumber = parseInt(match[2], 10);
+
+                  if (!pgVersionGroups[pgMajor]) {
+                    pgVersionGroups[pgMajor] = [];
+                  }
+
+                  pgVersionGroups[pgMajor].push({
+                    id: version.id,
+                    buildNumber: buildNumber,
+                    tags: tags,
+                    created_at: version.created_at,
+                    name: version.name
+                  });
+
+                  // Only process each version once (break after first matching tag)
+                  break;
+                }
+              }
+            }
+
+            console.log(`Grouped into PostgreSQL versions: ${Object.keys(pgVersionGroups).join(', ')}`);
+
+            // For each PostgreSQL version, keep only the last 2 builds
+            let deleteCount = 0;
+            for (const [pgMajor, versionList] of Object.entries(pgVersionGroups)) {
+              console.log(`\nProcessing PostgreSQL ${pgMajor} - ${versionList.length} versions found`);
+
+              // Sort by build number (descending) - highest build number is newest
+              versionList.sort((a, b) => b.buildNumber - a.buildNumber);
+
+              // Log all versions for this PG major version
+              versionList.forEach((v, idx) => {
+                console.log(`  ${idx + 1}. Build ${v.buildNumber} - ID ${v.id} - ${v.tags.join(', ')}`);
+              });
+
+              // Keep the first 2 (newest), delete the rest
+              const toDelete = versionList.slice(2);
+
+              if (toDelete.length === 0) {
+                console.log(`  Keeping all ${versionList.length} versions (less than or equal to 2)`);
+                continue;
+              }
+
+              console.log(`  Keeping 2 newest versions, deleting ${toDelete.length} old versions`);
+
+              for (const version of toDelete) {
+                console.log(`  Deleting version ID ${version.id} (build ${version.buildNumber}) with tags: ${version.tags.join(', ')}`);
+                try {
+                  await github.rest.packages.deletePackageVersionForOrg({
+                    package_type: 'container',
+                    package_name: packageName,
+                    org: owner,
+                    package_version_id: version.id
+                  });
+                  deleteCount++;
+                  console.log(`    ✓ Deleted successfully`);
+                } catch (error) {
+                  console.log(`    ✗ Failed to delete: ${error.message}`);
+                }
+              }
+            }
+
+            console.log(`\n=== Summary ===`);
+            console.log(`Total versions deleted: ${deleteCount}`);
