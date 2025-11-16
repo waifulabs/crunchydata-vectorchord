@@ -9,3 +9,4 @@ crunchydata:
 vectorchord:
   # renovate: datasource=github-releases depName=tensorchord/VectorChord
   - 1.0.0
+  - 0.5.3
