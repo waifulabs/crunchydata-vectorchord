@@ -20,7 +20,7 @@ jobs:
       matrix: ${{ steps.get-versions.outputs.result }}
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Get dependency versions
         uses: mikefarah/yq@796317b885ae219215caa36e9bdacc87c9962c15 # v4.48.2
         id: get-versions
