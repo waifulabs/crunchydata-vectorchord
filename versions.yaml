@@ -1,11 +1,11 @@
 ---
 crunchydata:
   # renovate: datasource=custom.crunchydata-postgres depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres registryUrl=https://www.crunchydata.com/developers/download-postgres/containers/postgresql18
-  - ubi9-18.1-2547
+  - ubi9-18.1-2550
   # renovate: datasource=custom.crunchydata-postgres depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres registryUrl=https://www.crunchydata.com/developers/download-postgres/containers/postgresql17
-  - ubi9-17.7-2547
+  - ubi9-17.7-2550
   # renovate: datasource=custom.crunchydata-postgres depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres registryUrl=https://www.crunchydata.com/developers/download-postgres/containers/postgresql16
-  - ubi9-16.11-2547
+  - ubi9-16.11-2550
 vectorchord:
   # renovate: datasource=github-releases depName=tensorchord/VectorChord
   - 0.5.3
